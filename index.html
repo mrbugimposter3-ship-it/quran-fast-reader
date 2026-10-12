@@ -5,6 +5,7 @@ body{margin:0;background:#0f1a14;color:#e8f5e9;font-family:system-ui;overflow:hi
 button,select,input{background:#2e7d32;color:#fff;border:0;border-radius:6px;padding:6px 10px;font-size:14px}input{width:60px;background:#244}
 #stage{position:absolute;top:0;bottom:0;left:0;right:0;overflow:hidden}
 #txt{font-family:"Amiri","Scheherazade New","Traditional Arabic",serif;direction:rtl;line-height:2.2}
+.up #txt{max-width:900px;margin:0 auto;padding:50vh 24px;display:flex;flex-direction:column-reverse;text-align:center}.up .a{display:block;margin:8px 0}.up #line{left:0;right:0;top:50%;border-top-width:2px}
 .tele #txt{max-width:900px;margin:0 auto;padding:50vh 24px;text-align:justify}
 .side #txt{white-space:nowrap;position:absolute;top:50%;transform:translateY(-50%);padding:0 100vw}
 .a{transition:color .3s}.cur{color:#ffd54f}.n{color:#81c784;font-size:.7em;margin:0 6px}
@@ -19,7 +20,7 @@ button,select,input{background:#2e7d32;color:#fff;border:0;border-radius:6px;pad
 <button id="pp">▶ Play</button>
 <label>Finish in <input id="hrs" type="number" step="0.25" value="6"> h</label>
 <button id="slow">−</button><span id="sp">100%</span><button id="fast">+</button>
-<select id="mode"><option value="tele">Teleprompter</option><option value="side">Side scroll</option><option value="flash">Flash (one word)</option></select>
+<select id="mode"><option value="tele">Teleprompter</option><option value="up">Scroll up (reverse)</option><option value="side">Side scroll</option><option value="flash">Flash (one word)</option></select>
 <label>Size <input id="fs" type="number" value="34"></label>
 <select id="juz"></select><span id="info"></span></div>
 <div id="fw"><div id="fword"></div><div id="fref"></div></div><div id="stage"><div id="line"></div><div id="txt"></div></div>
@@ -38,7 +39,7 @@ if(i!==curI){if(curI>=0)els[curI].classList.remove('cur');e.classList.add('cur')
 const md=document.body.className,side=md=='side';
 if(md=='flash'){const [tx,nm,n]=meta[i],ws=tx.split(/\s+/).filter(Boolean);let c=0,k=Math.floor(f*tx.length),w=ws[ws.length-1];for(const x of ws){c+=x.length+1;if(c>k){w=x;break}}fword.textContent=w;fref.textContent=nm+' · '+n}
 else if(side){const r=e.offsetLeft+e.offsetWidth*(1-f);txt.style.left=(innerWidth/2-r)+'px'}
-else{const rects=e.getClientRects();let y=e.offsetTop+e.offsetHeight*f;stage.scrollTop=y-innerHeight/2}
+else{const rects=e.getClientRects();let y=e.offsetTop+e.offsetHeight*(md=='up'?1-f:f);stage.scrollTop=y-innerHeight/2}
 let left=(total-pos)/rate();$('info').textContent=`Juz ${Q.length&&getJuz(i)} · ${(pos/total*100).toFixed(1)}% · ${Math.floor(left/3600)}h ${Math.floor(left%3600/60)}m left`}
 let jz=[];Q.forEach(s=>s[2].forEach(a=>jz.push(a[1])));const getJuz=i=>jz[i];
 function loop(t){if(playing&&last){pos=Math.min(total-1,pos+rate()*(t-last)/1000)}last=t;render();if(Math.random()<.02)localStorage.qpos=pos;requestAnimationFrame(loop)}
